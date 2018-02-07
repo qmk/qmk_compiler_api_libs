@@ -1,5 +1,7 @@
 # C# Library for the QMK Compile API
 
+## Currently in development, not everything is available yet.
+
 Provides access to all the API endpoints as well as an automated process of submitting a compilation request and downloading the result.
 
 ## Usage example
