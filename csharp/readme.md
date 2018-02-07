@@ -26,3 +26,14 @@ CompilationStatus status = await QMKCompilerAPI.GetCompilationStatusAsync(result
 var filepath = "./mykeymap.hex"
 await QMKCompilerAPI.DownloadFirmwareAsync(status, filepath);
 ```
+
+This process can also be fully automated in the following way
+```cs
+AutoCompilationResult result = await QMKCompilerAPI.CompileAndDownloadAsync(kb, request);
+if(result.Success)
+{
+    result.Save(filepath);
+}
+```
+This will submit a request and periodically check if the compilation is done or has failed.
+In either of those cases it will return a result object that will contain info whether it succeeded and if so the data for the firmare. If it didn't succeed it will contain the error information as well.
