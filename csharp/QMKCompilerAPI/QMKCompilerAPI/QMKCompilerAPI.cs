@@ -1,8 +1,7 @@
-﻿using System;
+﻿using QMKCompilerAPI.Internal;
+using RestSharp;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using QMKCompilerAPI.Internal;
-using RestSharp;
 using static QMKCompilerAPI.Constants;
 
 namespace QMKCompilerAPI
@@ -10,43 +9,36 @@ namespace QMKCompilerAPI
     // ReSharper disable once InconsistentNaming
     public static class QMKCompilerAPI
     {
-        private static readonly RestClient Client = new RestClient(BASE);
+        /// <summary>
+        /// Get a list of all available keyboards.
+        /// </summary>
+        /// <returns>A <list type="string"></list> with the names of all available keyboards.</returns>
+        public static async Task<List<string>> GetKeyboardsAsync() => await RESTHelper.DoGetRequestInternal<List<string>>(KEYBOARDS);
 
-        public static async Task<List<string>> GetKeyboards() => await DoRequestInternal<List<string>>(KEYBOARDS);
+        /// <summary>
+        /// Get information about a keyboard.
+        /// </summary>
+        /// <param name="name">Name of the keyboard.</param>
+        /// <returns>A <see cref="Keyboard"/> which contains information about the keyboard.</returns>
+        public static async Task<Keyboard> GetKeyboardAsync(string name) =>
+            (await RESTHelper.DoGetRequestInternal<KeyboardRootResult>(KEYBOARD,
+                new Parameter { Type = ParameterType.UrlSegment, Name = KEYBOARD_PARAM, Value = name })).Keyboards[name];
 
-        public static async Task<Keyboard> GetKeyboard(string name)
-        {
-            var parameter = new Parameter
-            {
-                Type = ParameterType.UrlSegment,
-                Name = KEYBOARD_PARAM,
-                Value = name
-            };
+        /// <summary>
+        /// Request a layout to be compiled.
+        /// </summary>
+        /// <param name="request">Information for the complation request.</param>
+        /// <returns>A <see cref="CompileRequestResult"/> containing the result of the request.</returns>
+        public static async Task<CompileRequestResult> CompileKeyboardAsync(CompileRequest request) =>
+            await RESTHelper.DoPostRequestInternal<CompileRequestResult>(COMPILE, request);
 
-            var result = await DoRequestInternal<KeyboardRootResult>(KEYBOARD, parameter);
-            return result.Keyboards[name];
-        }
-
-        private static async Task<T> DoRequestInternal<T>(string resource, params Parameter[] parameters) => await DoRequestInternal<T>(resource, Method.GET, parameters);
-        private static async Task<T> DoRequestInternal<T>(string resource, Method method = Method.GET, params Parameter[] parameters)
-        {
-            var request = new RestRequest(resource, method)
-            {
-                DateFormat = "yyyy-MM-dd HH:mm:ss UTC"
-            };
-
-            foreach (var parameter in parameters)
-            {
-                request.AddParameter(parameter);
-            }
-
-            var result = await Client.ExecuteGetTaskAsync<T>(request);
-            if (result.IsSuccessful)
-            {
-                return result.Data;
-            }
-
-            throw new Exception();
-        }
+        /// <summary>
+        /// Check the status of a compilation.
+        /// </summary>
+        /// <param name="result">The result object acquired from <see cref="CompileKeyboard"/></param>
+        /// <returns>A <see cref="CompilationStatus"/> containing the information about the current status of the compilation.</returns>
+        public static async Task<CompilationStatus> GetCompilationStatusAsync(CompileRequestResult result) =>
+            await RESTHelper.DoGetRequestInternal<CompilationStatus>(COMPILE_CHECK,
+                new Parameter { Type = ParameterType.UrlSegment, Name = COMPILE_CHECK_PARAM, Value = result.JobId });
     }
 }
