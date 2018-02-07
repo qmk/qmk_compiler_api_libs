@@ -22,12 +22,12 @@ CompileRequestResult result = await QMKCompilerAPI.CompileKeyboardAsync(request)
 // Periodically check the current status
 CompilationStatus status = await QMKCompilerAPI.GetCompilationStatusAsync(result);
 
-// Finally if it is sucessfull, download the firmware
+// Finally if it is successful, download the firmware
 var filepath = "./mykeymap.hex"
 await QMKCompilerAPI.DownloadFirmwareAsync(status, filepath);
 ```
 
-This process can also be fully automated in the following way
+This process can also be fully automated in the following way.
 ```cs
 AutoCompilationResult result = await QMKCompilerAPI.CompileAndDownloadAsync(kb, request);
 if(result.Success)
