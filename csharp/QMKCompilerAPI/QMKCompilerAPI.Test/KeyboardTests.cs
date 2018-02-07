@@ -11,7 +11,7 @@ namespace QMKCompilerAPI.Test
         {
             try
             {
-                var result = await QMKCompilerAPI.GetKeyboards();
+                var result = await QMKCompilerAPI.GetKeyboardsAsync();
                 Assert.NotEmpty(result);
             }
             catch (Exception)
@@ -30,7 +30,7 @@ namespace QMKCompilerAPI.Test
         {
             try
             {
-                var result = await QMKCompilerAPI.GetKeyboard(name);
+                var result = await QMKCompilerAPI.GetKeyboardAsync(name);
                 Assert.NotNull(result);
                 Assert.NotEmpty(result.Layouts);
 
