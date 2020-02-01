@@ -44,12 +44,6 @@ namespace QMKCompilerAPI.Test
             }, 
             "keymap", "layout", new string[1][]);
 
-        private readonly CompileRequest badRequest = new CompileRequest(
-            new Keyboard() 
-            { 
-                KeyboardName = "keyboard" 
-            }, null, null, null);
-
         private readonly string badResource = "Bad Resource";
         private readonly string goodResource = Constants.KEYBOARD;
         #endregion

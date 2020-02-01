@@ -5,7 +5,7 @@ using Xunit;
 
 namespace QMKCompilerAPI.Test
 {
-    public class QMKCompilerAPITests : TestBase
+    public class QMKCompilerAPITests
     {
         [Fact]
         public async Task Get_keyboards_does_not_throw()

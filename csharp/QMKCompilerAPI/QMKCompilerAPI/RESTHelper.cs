@@ -45,7 +45,7 @@ namespace QMKCompilerAPI
                 return response.Data;
             }
 
-            throw new RestSharp.(response.Content, response.ErrorException);
+            throw new Exception(response.Content, response.ErrorException);
         }
     }
 }
