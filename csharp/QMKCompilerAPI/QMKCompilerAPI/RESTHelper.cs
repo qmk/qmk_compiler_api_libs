@@ -1,6 +1,9 @@
 ﻿using RestSharp;
 using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+
+[assembly: InternalsVisibleTo("QMKCompilerAPI.Test")]
 
 namespace QMKCompilerAPI
 {
@@ -42,7 +45,7 @@ namespace QMKCompilerAPI
                 return response.Data;
             }
 
-            throw new Exception();
+            throw new Exception(response.Content, response.ErrorException);
         }
     }
 }
